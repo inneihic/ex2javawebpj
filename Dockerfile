@@ -8,9 +8,8 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-# Copy the Maven wrapper (if you use it, which your repo includes)
+# Copy the Maven wrapper
 COPY mvnw .
-COPY .mvn ./.mvn
 
 # Ensure the Maven wrapper is executable
 RUN chmod +x mvnw
