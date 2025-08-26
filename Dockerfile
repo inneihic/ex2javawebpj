@@ -1,11 +1,8 @@
-# Stage 1: Build
-FROM maven:3.9.4-eclipse-temurin-17 AS build
+FROM maven:3.9.8-eclipse-temurin-21 AS build
 WORKDIR /app
-
-# copy toàn bộ project vào
-COPY . .
-
-# build với spring-boot:repackage để tạo runnable jar
+COPY ex2javawebpj/main/pom.xml .
+RUN mvn dependency:go-offline -B
+COPY ex2javawebpj/main/src ./src
 RUN mvn clean package spring-boot:repackage -DskipTests
 
 # Stage 2: Run
