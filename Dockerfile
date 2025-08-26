@@ -8,7 +8,7 @@ RUN mvn dependency:go-offline -B
 
 # Copy source code và build
 COPY ex2javawebpj/main/src ./src
-RUN mvn clean package spring-boot:repackage -DskipTests -B
+RUN mvn clean install -DskipTests -B
 
 # ---- Runtime stage ----
 FROM eclipse-temurin:21-jre-jammy
