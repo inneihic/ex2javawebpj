@@ -1,19 +1,28 @@
-FROM maven:3.9.8-eclipse-temurin-21 AS build
-WORKDIR /app
-COPY ex2javawebpj/main/pom.xml .
-RUN mvn dependency:go-offline -B
-COPY ex2javawebpj/main/src ./src
-RUN mvn clean package spring-boot:repackage -DskipTests
+# Use an official OpenJDK base image with Java 17
+FROM openjdk:17-jdk-slim
 
-# Stage 2: Run
-FROM eclipse-temurin:17-jdk
+# Set the working directory inside the container
 WORKDIR /app
 
-# copy file jar từ stage build
-COPY --from=build /app/target/*.jar app.jar
+# Copy the Maven configuration and source code
+COPY pom.xml .
+COPY src ./src
 
-# expose port (ví dụ 8080)
-EXPOSE 8080
+# Copy the Maven wrapper (if you use it, which your repo includes)
+COPY mvnw .
+COPY .mvn ./.mvn
 
-# chạy app
-ENTRYPOINT ["java","-jar","app.jar"]
+# Ensure the Maven wrapper is executable
+RUN chmod +x mvnw
+
+# Install Maven and build the application, skipping tests to speed up the build
+RUN ./mvnw clean package -DskipTests
+
+# Expose the port that Render.com expects (default is 10000)
+EXPOSE 10000
+
+# Set the environment variable for the port (Render.com expects PORT)
+ENV PORT=10000
+
+# Run the Spring Boot application
+CMD ["java", "-jar", "target/ex2javawebpj-0.0.1-SNAPSHOT.jar", "--server.port=${PORT}"]
