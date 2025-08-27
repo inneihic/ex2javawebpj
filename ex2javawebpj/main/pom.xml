@@ -1,80 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.example</groupId>
-    <artifactId>ex02javawebpj</artifactId>
-    <version>1.0.0</version>
-    <packaging>jar</packaging>
-    <name>web-bt3-clone</name>
-    <description>Clone of https://web-bt3.onrender.com as a Spring Boot app</description>
+package Survey;
 
-    <properties>
-        <java.version>21</java.version>
-        <spring.boot.version>3.3.2</spring.boot.version>
-    </properties>
+import jakarta.validation.constraints.*;
+import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.2.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+@Getter
+@Setter
+public class SurveyForm {
+    @NotBlank(message = "First name is required")
+    private String firstName;
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    @NotBlank(message = "Last name is required")
+    private String lastName;
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                     <version>3.2.0</version>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-</project>
+    @Email(message = "Email must be valid")
+    @NotBlank(message = "Email is required")
+    private String email;
+
+    @Past(message = "Day of Birth must be in the past")
+    private LocalDate dayOfBirth;
+
+    @Pattern(regexp = "Search engine|Word of mouth|Social Media|Other", message = "Invalid source")
+    private String heardFrom;
+
+    private boolean wantsAnnouncements;
+    private boolean wantsEmailAnnouncements;
+
+    @Pattern(regexp = "Email or postal mail|Email only|Postal mail only", message = "Invalid contact preference")
+    private String contactPreference;
+}
