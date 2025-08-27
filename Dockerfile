@@ -1,27 +1,24 @@
-# Use an official OpenJDK base image with Java 17
-FROM openjdk:17-jdk-slim
+# Stage 1: Build the application
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 
-# Set the working directory inside the container
 WORKDIR /app
-
-# Copy the Maven configuration and source code
 COPY pom.xml .
 COPY src ./src
 
-# Copy the Maven wrapper
-COPY mvnw .
+# Build the application
+RUN mvn clean package -DskipTests
 
-# Ensure the Maven wrapper is executable
-RUN chmod +x mvnw
+# Stage 2: Run the application
+FROM eclipse-temurin:21-jre
 
-# Install Maven and build the application, skipping tests to speed up the build
-RUN ./mvnw clean package -DskipTests
+WORKDIR /app
+COPY --from=builder /app/target/ex02javawebpj-1.0.0.jar app.jar
 
-# Expose the port that Render.com expects (default is 10000)
-EXPOSE 10000
+# Expose the port (Render.com defaults to 10000, but can be customized)
+EXPOSE 8080
 
-# Set the environment variable for the port (Render.com expects PORT)
-ENV PORT=10000
+# Set environment variable for CSV file path (optional, for flexibility)
+ENV CSV_STORAGE_PATH=/app/submissions.csv
 
-# Run the Spring Boot application
-CMD ["java", "-jar", "target/ex2javawebpj-0.0.1-SNAPSHOT.jar", "--server.port=${PORT}"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
