@@ -7,8 +7,6 @@
     <artifactId>ex02javawebpj</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>web-bt3-clone</name>
-    <description>Clone of https://web-bt3.onrender.com as a Spring Boot app</description>
 
     <properties>
         <java.version>21</java.version>
